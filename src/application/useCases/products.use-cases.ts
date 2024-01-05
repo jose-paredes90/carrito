@@ -14,7 +14,7 @@ export class ProductsUseCases implements IProductsUseCasesPort {
         private readonly productRepository: ProductsRepositoryInterface) {
     }
 
-    public async getById(id: number): Promise<ProductsDto> {
+    public async getById(id: string): Promise<ProductsDto> {
         const product = await this.productRepository.getProduct(id);
         return product
     }
@@ -34,19 +34,20 @@ export class ProductsUseCases implements IProductsUseCasesPort {
     }
 
     public async update(
-        id: number,
+        id: string,
         dto: ProductsCreateDto
     ): Promise<ProductsDto> {
         const product = new Products();
-        product._id = id.toString();
+        product._id = id;
         product.stock = dto.stock;
         product.name = dto.name;
+        product.price = dto.price;
         const response = await this.productRepository.updateProducts(product);
 
         return this.toDTO(response);
     }
 
-    public async delete(id: number): Promise<ProductsDto> {
+    public async delete(id: string): Promise<ProductsDto> {
         const product = await this.productRepository.getProduct(id);
         if (!product) throw new NotFoundException("Producto no encontrado");
 
@@ -69,6 +70,7 @@ export class ProductsUseCases implements IProductsUseCasesPort {
         item._id = product._id;
         item.name = product.name;
         item.stock = product.stock;
+        item.price = product.price;
         return item;
     }
 }

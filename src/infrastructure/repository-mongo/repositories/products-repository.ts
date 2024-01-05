@@ -15,17 +15,18 @@ export class ProductsRepository implements ProductsRepositoryInterface {
         return response;
     }
 
-    public async getProduct(id: number): Promise<Products> {
+    public async getProduct(id: string): Promise<Products> {
         const response = await ProductsSchema.findById(id);
         return response as Products
     }
 
     public async updateProducts(product: Products): Promise<Products> {
-        await ProductsSchema.updateOne(product, { where: { id: product._id } });
+        console.log(product);
+        await ProductsSchema.findByIdAndUpdate(product._id, product);
         return product;
     }
 
-    public async deleteProducts(id: number): Promise<void> {
-        await ProductsSchema.deleteOne({ where: { id } });
+    public async deleteProducts(id: string): Promise<void> {
+        await ProductsSchema.findByIdAndDelete(id);
     }
 }

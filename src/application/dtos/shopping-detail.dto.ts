@@ -1,4 +1,4 @@
 export class ShoppingDetailDto {
-    productId: number;
+    productId: string;
     quantity: number;
 }

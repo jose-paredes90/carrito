@@ -2,14 +2,13 @@ import { Request, Response } from "express";
 import { ApiOperationDelete, ApiOperationGet, ApiOperationPost, ApiOperationPut, ApiPath, SwaggerDefinitionConstant } from "@inversify-cn/swagger-express-ts";
 import { inject } from "inversify";
 import { controller, httpDelete, httpGet, httpPost, httpPut } from "inversify-express-utils";
-import { ProductsUseCases } from "../../application/useCases/products.use-cases";
 import { IProductsUseCasesPort } from "../../application/useCasesPorts/products.use-cases.ports";
 import { ProductsCreateDto } from "../../application/dtos/products-create.dto";
 import { validateRequestMiddleware } from "../middlewares/validate-request.middleware";
 
 @ApiPath({
     path: "/products",
-    name: "Productos",
+    name: "Products",
     security: { basicAuth: [] },
 })
 
@@ -26,7 +25,7 @@ export class ProductsController {
             path: {
                 id: {
                     required: true,
-                    type: SwaggerDefinitionConstant.Parameter.Type.NUMBER,
+                    type: SwaggerDefinitionConstant.Parameter.Type.STRING,
                 },
             },
         },
@@ -40,7 +39,7 @@ export class ProductsController {
     @httpGet("/:id")
     public async getProductById(req: Request, res: Response) {
         const { id } = req.params;
-        const response = await this.productsUseCases.getById(+id);
+        const response = await this.productsUseCases.getById(id);
         res.send(response);
     }
 
@@ -57,9 +56,6 @@ export class ProductsController {
     @httpGet("/")
     public async getProducts(req: Request, res: Response) {
         const response = await this.productsUseCases.get();
-        // const kaf = new KafkaAdapter();
-        // const info = await kaf.produce(JSON.stringify(response));
-        // console.log(info);
         res.send(response);
     }
 
@@ -93,7 +89,14 @@ export class ProductsController {
 
     @ApiOperationPut({
         description: "Update Product",
+        path: "/{id}",
         parameters: {
+            path: {
+                id: {
+                    required: true,
+                    type: SwaggerDefinitionConstant.Parameter.Type.STRING,
+                },
+            },
             body: {
                 description: "Product",
                 model: "ProductCreate",
@@ -107,14 +110,15 @@ export class ProductsController {
         },
         summary: "Update product",
     })
-    @httpPut("/")
+    @httpPut("/:id")
     public async updateProduct(req: Request, res: Response) {
         const { id } = req.params;
-        const { name, stock } = req.body;
+        const { name, stock, price } = req.body;
         const dto = new ProductsCreateDto();
         dto.name = name;
         dto.stock = stock;
-        const response = await this.productsUseCases.update(+id, dto);
+        dto.price = price;
+        const response = await this.productsUseCases.update(id, dto);
         res.send(response);
     }
 
@@ -125,7 +129,7 @@ export class ProductsController {
             path: {
                 id: {
                     required: true,
-                    type: SwaggerDefinitionConstant.Parameter.Type.NUMBER,
+                    type: SwaggerDefinitionConstant.Parameter.Type.STRING,
                 },
             },
         },
@@ -139,7 +143,7 @@ export class ProductsController {
     @httpDelete("/:id")
     public async deleteProduct(req: Request, res: Response) {
         const { id } = req.params;
-        const response = await this.productsUseCases.delete(+id);
+        const response = await this.productsUseCases.delete(id);
         res.send(response);
     }
 }
