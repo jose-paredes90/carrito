@@ -9,6 +9,7 @@ import { dbConnection } from "./infrastructure/repository-mongo/schemas/index";
 import { IOC } from "./infrastructure/ioc";
 import "./infrastructure/controllers";
 import { ExceptionsMiddleware } from "./infrastructure/middlewares/exceptions.middleware";
+import { KafkaAdapterInterface } from "./infrastructure/kafka/kafka.adapter.interface";
 
 const main = async () => {
 
@@ -20,8 +21,8 @@ const main = async () => {
     const ioc = new IOC();
     ioc.configureContainer(container);
 
-    // const brokerConsumer = container.get<KafkaAdapterInterface>("KafkaAdapter");
-    // brokerConsumer.consume();
+    const brokerConsumer = container.get<KafkaAdapterInterface>("KafkaAdapter");
+    brokerConsumer.consume();
 
     const server = new InversifyExpressServer(container);
     server.setConfig((app) => {

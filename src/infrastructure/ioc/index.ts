@@ -7,6 +7,8 @@ import { ICustomerUseCasesPort } from "../../application/useCasesPorts/customer.
 import { CustomersUseCases } from "../../application/useCases/customer.use-cases";
 import { CustomersRepositoryInterface } from "../../domain/repositories/customers-repository";
 import { CustomerRepository } from "../repository-mongo/repositories/customers-repository";
+import { KafkaAdapterInterface } from "../kafka/kafka.adapter.interface";
+import { kafkaAdapter } from "../kafka/kafka.adapter";
 
 export class IOC {
     public configureContainer(container: Container) {
@@ -22,5 +24,7 @@ export class IOC {
         container
             .bind<CustomersRepositoryInterface>("CustomerRepository")
             .to(CustomerRepository)
+        container.bind<KafkaAdapterInterface>("KafkaAdapter")
+            .to(kafkaAdapter);
     }
 }

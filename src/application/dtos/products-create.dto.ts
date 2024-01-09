@@ -22,7 +22,7 @@ export class ProductsCreateDto {
     @IsNotEmpty({ message: 'El stock es obligatorio' })
     @IsNumber()
     @Min(1, { message: 'El valor del stock debe ser mayor a 0' })
-    @Max(1000, { message: 'El valor del stock no puede ser mayor a 1000' })
+    @Max(5000, { message: 'El valor del stock no puede ser mayor a 5000' })
     stock: number;
 
     @ApiModelProperty({
@@ -32,6 +32,5 @@ export class ProductsCreateDto {
     @IsNotEmpty({ message: 'El price es obligatorio' })
     @IsNumber()
     @Min(1, { message: 'El valor del price debe ser mayor a 0' })
-    @Max(1000, { message: 'El valor del price no puede ser mayor a 1000' })
     price: number;
 }
