@@ -6,6 +6,7 @@ import { Request, Response } from "express";
 import { validateRequestMiddleware } from "../middlewares/validate-request.middleware";
 import { CustomerCreateDto } from "../../application/dtos/customers-create.dto";
 import { CustomerUpdateDto } from "../../application/dtos/customers-update.dto";
+import { KafkaAdapterInterface } from "../kafka/kafka.adapter.interface";
 
 @ApiPath({
     path: "/customers",
@@ -16,7 +17,8 @@ import { CustomerUpdateDto } from "../../application/dtos/customers-update.dto";
 @controller("/customers")
 export class CustomersController {
     constructor(
-        @inject("CustomersUseCases") private CustomerUseCases: ICustomerUseCasesPort
+        @inject("CustomersUseCases") private CustomerUseCases: ICustomerUseCasesPort,
+        @inject("KafkaAdapter") private IkafkaAdapter: KafkaAdapterInterface
     ) { }
 
     @ApiOperationGet({
@@ -81,16 +83,22 @@ export class CustomersController {
 
     @httpPost("/", validateRequestMiddleware(CustomerCreateDto))
     public async createCustomer(req: Request, res: Response) {
-        const { name, lastname, address, document, phone, country } = req.body;
+        const { name, lastname, address, document, phone, country, email } = req.body;
         const dto = new CustomerCreateDto();
         dto.name = name,
             dto.lastname = lastname,
             dto.address = address,
             dto.document = document,
             dto.phone = phone,
+            dto.email = email,
             dto.country = country
 
         const response = await this.CustomerUseCases.create(dto);
+        if (response) {
+            const kaf = JSON.stringify(response)
+            this.IkafkaAdapter.produce(kaf);
+        }
+
         res.send(response);
     }
 
@@ -122,11 +130,12 @@ export class CustomersController {
 
     public async updateCustomer(req: Request, res: Response) {
         const { id } = req.params;
-        const { name, lastname, document } = req.body;
+        const { name, lastname, document, email } = req.body;
         const dto = new CustomerUpdateDto();
         dto.name = name;
         dto.lastname = lastname;
         dto.document = document;
+        dto.email = email;
         const response = await this.CustomerUseCases.update(id, dto);
         res.send(response);
     }

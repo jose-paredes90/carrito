@@ -31,6 +31,7 @@ export class CustomersUseCases implements ICustomerUseCasesPort {
         customer.address = dto.address;
         customer.document = dto.document;
         customer.phone = dto.phone;
+        customer.email = dto.email;
         customer.country = dto.country;
         const response = await this.customerRepository.createCustomer(customer);
         return response;
@@ -42,6 +43,7 @@ export class CustomersUseCases implements ICustomerUseCasesPort {
         customer.name = dto.name;
         customer.lastname = dto.lastname;
         customer.document = dto.document;
+        customer.email = dto.email;
         const updatedCustomer = await this.customerRepository.updateCustomer(customer);
         return this.toDTO(updatedCustomer);
     }
@@ -61,6 +63,7 @@ export class CustomersUseCases implements ICustomerUseCasesPort {
         item.address = customer.address;
         item.document = customer.document;
         item.phone = customer.phone;
+        item.email = customer.email;
         item.country = customer.country;
         return item;
     }

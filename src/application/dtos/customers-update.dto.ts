@@ -1,5 +1,5 @@
 import { ApiModel, ApiModelProperty } from "@inversify-cn/swagger-express-ts";
-import { IsNotEmpty, IsNumber, IsString, Max, Min } from "class-validator";
+import { IsNotEmpty, IsNumber, IsString, isEmail } from "class-validator";
 
 @ApiModel({
     description: 'Customer create',
@@ -31,4 +31,12 @@ export class CustomerUpdateDto {
     @IsNumber()
     
     document: number;
+
+    @ApiModelProperty({
+        description: 'email',
+        required: true
+    })
+    @IsNotEmpty({ message: 'El email es obligatorio' })
+    @IsString({ message: 'El valor debe ser un string' })
+    email: string;
 }

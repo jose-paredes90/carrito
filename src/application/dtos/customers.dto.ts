@@ -48,6 +48,13 @@ export class CustomerDto {
     phone: number;
 
     @ApiModelProperty({
+        description: 'email',
+        required: true,
+        example: 'jose@gmail.com'
+    })
+    email: string;
+
+    @ApiModelProperty({
         description: 'country',
         required: true,
         example: 'Alemania'

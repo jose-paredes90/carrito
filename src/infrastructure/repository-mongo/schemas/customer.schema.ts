@@ -1,4 +1,4 @@
-import mongoose,{ Model, Schema } from "mongoose";
+import mongoose, { Model, Schema } from "mongoose";
 import { Customers } from "../../../domain/entities/customers";
 
 const CustomerModel: Schema = new Schema({
@@ -6,6 +6,7 @@ const CustomerModel: Schema = new Schema({
     lastname: { type: String, required: true },
     address: { type: String, required: true },
     document: { type: Number, required: true },
+    email: { type: String, required: true},
     phone: { type: Number, required: true },
     country: { type: String, required: true },
 })

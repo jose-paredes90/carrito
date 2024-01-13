@@ -49,6 +49,13 @@ export class CustomerCreateDto {
     phone: number;
 
     @ApiModelProperty({
+        description: 'email',
+        required: true
+    })
+    @IsNotEmpty({message: 'El Email es obligatorio'})
+    email: string;
+
+    @ApiModelProperty({
         description: 'country',
         required: true
     })
