@@ -83,14 +83,15 @@ export class CustomersController {
 
     @httpPost("/", validateRequestMiddleware(CustomerCreateDto))
     public async createCustomer(req: Request, res: Response) {
-        const { name, lastname, address, document, phone, country, email } = req.body;
+        const { name, lastname, address, document, phone, country, email, password } = req.body;
         const dto = new CustomerCreateDto();
-        dto.name = name,
+            dto.name = name,
             dto.lastname = lastname,
             dto.address = address,
             dto.document = document,
             dto.phone = phone,
             dto.email = email,
+            dto.password = password,
             dto.country = country
 
         const response = await this.CustomerUseCases.create(dto);
@@ -130,12 +131,13 @@ export class CustomersController {
 
     public async updateCustomer(req: Request, res: Response) {
         const { id } = req.params;
-        const { name, lastname, document, email } = req.body;
+        const { name, lastname, document, email, password } = req.body;
         const dto = new CustomerUpdateDto();
         dto.name = name;
         dto.lastname = lastname;
         dto.document = document;
         dto.email = email;
+        dto.password = password;
         const response = await this.CustomerUseCases.update(id, dto);
         res.send(response);
     }

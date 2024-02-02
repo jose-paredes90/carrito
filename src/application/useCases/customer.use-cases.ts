@@ -1,4 +1,6 @@
 import { inject, injectable } from "inversify";
+import * as bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
 import { CustomersRepositoryInterface } from "../../domain/repositories/customers-repository";
 import { CustomerDto } from "../dtos/customers.dto";
 import { ICustomerUseCasesPort } from "../useCasesPorts/customer.use-cases.ports";
@@ -17,24 +19,56 @@ export class CustomersUseCases implements ICustomerUseCasesPort {
 
     public async getAll(): Promise<CustomerDto[]> {
         const customers = await this.customerRepository.getCustomers();
-        return customers;
+        return customers.map((item: Customers) => {
+            return this.toDTO(item)
+        });
+
     }
 
     public async getById(id: string): Promise<CustomerDto> {
         const customer = await this.customerRepository.getCustomer(id);
-        return customer;
+        return this.toDTO(customer);
     }
+
+    // private async generarToken(data: CustomerDto): Promise<string> {
+    //     const jwtSecret = 'miclave';
+    //     const jwtExpires = '300'
+    //     return jwt.sign({ datos: { id: data.id, name: data.name, email: data.email } }, jwtSecret, {
+    //         expiresIn: parseInt(jwtExpires)
+    //     });
+    // }
+
+    // public async login(email: string, password: string): Promise<string> {
+    //     const user = await this.customerRepository.login(email);
+    //     if (user) {
+    //         const passwordMatch = await bcrypt.compare(password, user.password);
+    //         if (passwordMatch) {
+    //             const token = await this.generarToken(user);
+    //             return token;
+    //         }
+    //         else {
+    //             throw new NotFoundException(`La contraseña proporcionada para el usuario con email ${email} es incorrecta`);
+    //         }
+    //     }
+    //     else {
+    //         throw new NotFoundException(`El usuario con el email ${email} no existe`);
+    //     }
+    // }
+
     public async create(dto: CustomerCreateDto): Promise<CustomerDto> {
+
+        const newPasswordEncrypted = await bcrypt.hash(dto.password, 11);
         const customer = new Customers();
         customer.name = dto.name;
         customer.lastname = dto.lastname;
         customer.address = dto.address;
         customer.document = dto.document;
+        customer.password = newPasswordEncrypted;
         customer.phone = dto.phone;
         customer.email = dto.email;
         customer.country = dto.country;
         const response = await this.customerRepository.createCustomer(customer);
-        return response;
+        return this.toDTO(response);
     }
 
     public async update(id: string, dto: CustomerUpdateDto): Promise<CustomerDto> {
@@ -44,6 +78,7 @@ export class CustomersUseCases implements ICustomerUseCasesPort {
         customer.lastname = dto.lastname;
         customer.document = dto.document;
         customer.email = dto.email;
+        customer.password = dto.password;
         const updatedCustomer = await this.customerRepository.updateCustomer(customer);
         return this.toDTO(updatedCustomer);
     }

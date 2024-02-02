@@ -56,6 +56,13 @@ export class CustomerCreateDto {
     email: string;
 
     @ApiModelProperty({
+        description: 'password',
+        required: true
+    })
+    @IsNotEmpty({message: 'El password es obligatorio'})
+    password: string;
+
+    @ApiModelProperty({
         description: 'country',
         required: true
     })

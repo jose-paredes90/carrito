@@ -8,4 +8,5 @@ export interface ICustomerUseCasesPort {
     create(dto: CustomerCreateDto): Promise<CustomerDto>;
     update(id: string, dto: CustomerUpdateDto): Promise<CustomerDto>;
     delete(id: string): Promise<CustomerDto>;
+    //login(email: string, password: string): Promise<string>;
 }

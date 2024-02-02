@@ -5,6 +5,7 @@ export class Customers {
     address: string;
     document: number;
     email: string;
+    password: string;
     phone: number;
     country: string
 }
