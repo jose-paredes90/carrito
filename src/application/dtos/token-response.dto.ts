@@ -1,3 +1,3 @@
-// export class TokenResponse {
-//     token: string;
-// }
+export class TokenResponse {
+    token: string;
+}

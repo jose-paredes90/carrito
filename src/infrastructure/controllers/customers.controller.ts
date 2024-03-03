@@ -32,6 +32,7 @@ export class CustomersController {
                 },
             },
         },
+
         responses: {
             200: {
                 description: "Customer",
@@ -73,6 +74,7 @@ export class CustomersController {
                 required: true
             },
         },
+        // security: [{ jwt: [] }],
         responses: {
             200: {
                 model: "CustomerItem",
@@ -85,7 +87,7 @@ export class CustomersController {
     public async createCustomer(req: Request, res: Response) {
         const { name, lastname, address, document, phone, country, email, password } = req.body;
         const dto = new CustomerCreateDto();
-            dto.name = name,
+        dto.name = name,
             dto.lastname = lastname,
             dto.address = address,
             dto.document = document,

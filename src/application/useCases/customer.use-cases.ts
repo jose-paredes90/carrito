@@ -30,30 +30,30 @@ export class CustomersUseCases implements ICustomerUseCasesPort {
         return this.toDTO(customer);
     }
 
-    // private async generarToken(data: CustomerDto): Promise<string> {
-    //     const jwtSecret = 'miclave';
-    //     const jwtExpires = '300'
-    //     return jwt.sign({ datos: { id: data.id, name: data.name, email: data.email } }, jwtSecret, {
-    //         expiresIn: parseInt(jwtExpires)
-    //     });
-    // }
+    private async generarToken(data: CustomerDto): Promise<string> {
+        const jwtSecret = 'miclave';
+        const jwtExpires = '300'
+        return jwt.sign({ datos: { id: data.id, name: data.name, email: data.email } }, jwtSecret, {
+            expiresIn: parseInt(jwtExpires)
+        });
+    }
 
-    // public async login(email: string, password: string): Promise<string> {
-    //     const user = await this.customerRepository.login(email);
-    //     if (user) {
-    //         const passwordMatch = await bcrypt.compare(password, user.password);
-    //         if (passwordMatch) {
-    //             const token = await this.generarToken(user);
-    //             return token;
-    //         }
-    //         else {
-    //             throw new NotFoundException(`La contraseña proporcionada para el usuario con email ${email} es incorrecta`);
-    //         }
-    //     }
-    //     else {
-    //         throw new NotFoundException(`El usuario con el email ${email} no existe`);
-    //     }
-    // }
+    public async login(email: string, password: string): Promise<string> {
+        const user = await this.customerRepository.login(email);
+        if (user) {
+            const passwordMatch = await bcrypt.compare(password, user.password);
+            if (passwordMatch) {
+                const token = await this.generarToken(user);
+                return token;
+            }
+            else {
+                throw new NotFoundException(`La contraseña proporcionada para el usuario con email ${email} es incorrecta`);
+            }
+        }
+        else {
+            throw new NotFoundException(`El usuario con el email ${email} no existe`);
+        }
+    }
 
     public async create(dto: CustomerCreateDto): Promise<CustomerDto> {
 

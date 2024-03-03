@@ -7,7 +7,7 @@ import CustomersSchema from "../schemas/customer.schema";
 @injectable()
 
 export class CustomerRepository implements CustomersRepositoryInterface {
-    
+
     public async getCustomers(): Promise<Customers[]> {
         const response: Customers[] = await CustomersSchema.find();
         return response;
@@ -27,10 +27,10 @@ export class CustomerRepository implements CustomersRepositoryInterface {
     public async deleteCustomer(id: string): Promise<void> {
         await CustomersSchema.findByIdAndDelete(id);
     }
-    // public async login(email: string): Promise<Customers> {
-    //     console.log(email);
-    //     const response = await CustomersSchema.findOne({ email } );
-    //     console.log(response);
-    //     return response as Customers
-    // }
+    public async login(email: string): Promise<Customers> {
+        console.log(email);
+        const response = await CustomersSchema.findOne({ email });
+        console.log(response);
+        return response as Customers
+    }
 }
